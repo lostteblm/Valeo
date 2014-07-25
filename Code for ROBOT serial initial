@@ -1,0 +1,28 @@
+#include <ArduinoRobot.h>
+ 
+int a=1;
+ 
+void setup()
+{
+  Robot.begin();
+  Robot.beginTFT();
+  Serial.begin(9600); 
+}
+
+void loop()
+{
+  Serial.println(a);
+
+  Serial.println(Robot.digitalRead(TKD3));
+  Robot.stroke(0,0,0);
+  Robot.text(a,0,0);
+  Robot.text(Robot.digitalRead(TKD3),5,0);
+  
+  delay(500);
+  
+  Robot.stroke(255,255,255);
+  Robot.text(a,0,0);
+  Robot.text(Robot.digitalRead(TKD3),5,0);
+  
+  a++;
+}
