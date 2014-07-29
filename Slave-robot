@@ -12,8 +12,12 @@
 #include <ArduinoRobot.h>
 #include <Wire.h>
 
+int a=1;
+
 void setup()
 {
+  Robot.begin();
+  Serial.begin(9600);
   Wire.begin(4);                // join i2c bus with address #4
   Wire.onReceive(receiveEvent); // register event
   Robot.beginTFT();
@@ -21,7 +25,19 @@ void setup()
 
 void loop()
 {
-  delay(100);
+//  Wire.onReceive(receiveEvent);
+  Serial.println(a);
+  
+  Robot.stroke(0,0,0);
+  Robot.text(a,0,0);
+  
+  delay(500);
+  
+  Robot.stroke(255,255,255);
+  Robot.text(a,0,0);
+  delay(500);
+  
+  a++;
 }
 
 // function that executes whenever data is received from master
@@ -33,18 +49,19 @@ void receiveEvent(int howMany)
     char c = Wire.read(); // receive byte as a character
     Serial.print(c);         // print the character
     Robot.stroke(0,0,0);
-    Robot.text(c,0,0);
+    Robot.text(c,20,0);
     delay(500);
     Robot.stroke(255,255,255);
-    Robot.text(c,0,0);
+    Robot.text(c,20,0);
     delay(500);  
   }
   int x = Wire.read();    // receive byte as an integer
   Serial.println(x);         // print the integer
   
     Robot.stroke(0,0,0);
-    Robot.text(x,0,0);
+    Robot.text(x,40,0);
     delay(500);
     Robot.stroke(255,255,255);
-    Robot.text(x,0,0);
-    delay(500);  }
+    Robot.text(x,40,0);
+    delay(500);  
+  }
