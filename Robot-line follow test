@@ -1,0 +1,76 @@
+// Wire Slave Receiver (Robot)
+// by Nicholas Zambetti <http://www.zambetti.com>
+
+// Demonstrates use of the Wire library
+// Receives data as an I2C/TWI slave device
+// Refer to the "Wire Master Writer" example for use with this
+
+// Created 29 March 2006
+
+// This example code is in the public domain.
+
+#include <ArduinoRobot.h>
+#include <Wire.h>
+
+void setup()
+{
+  Robot.begin();
+  Serial.begin(9600);
+  Wire.begin(4);                // join i2c bus with address #4
+  Robot.beginTFT();
+  delay(3000);
+  
+  Robot.setMode(MODE_LINE_FOLLOW);
+  Wire.onReceive(receiveEvent); // register event
+
+}
+
+void loop()
+{
+//  int compass=Robot.compassRead();
+//  Robot.drawCompass(compass);
+}
+
+// function that executes whenever data is received from master
+// this function is registered as an event, see setup()
+void receiveEvent(int howMany)
+{
+  while(1 < Wire.available()) // loop through all but the last
+  {
+    int angle = Wire.read(); // receive byte as a int
+    Serial.print("Input angle is ");
+    Serial.print(angle);         // print the angle
+    int compass=Robot.compassRead(); // read compass direction
+    Serial.print("Compass angle is ");
+    Serial.println(compass);
+    Robot.drawCompass(compass);
+    
+    // if angle received is larger than 0, that means angle value is correct
+    if(angle)
+    {
+      Robot.pauseMode(ture);
+      Robot.pointTo(angle);
+      Robot.motorsStop();
+      delay(500);
+      Robot.motorWrite(255,255);
+      delay(1000);
+      Robot.setMode(MODE_LINE_FOLLOW);
+//      if(angle-compass>0)  //target angle is larger than compass, then turn right
+//      {
+//        Robot.turn(angle-compass);
+//        Robot.motorsStop();
+//        delay(1000);
+//      }
+//      else if(angle-compass<0);  //target angle is larger than compass, then turn left
+//      {
+//        Robot.turn(angle-compass);
+//        Robot.motorsStop();
+//        delay(1000);
+//      }
+    }
+    else
+    {
+      Robot.setMode(MODE_LINE_FOLLOW);
+    }
+  }
+}
