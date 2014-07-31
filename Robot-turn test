@@ -16,11 +16,13 @@ void setup()
 {
   Robot.begin();
   Serial.begin(9600);
-  Serial.println("Program start");
-  Wire.begin(4);                // join i2c bus with address #4
   Robot.beginTFT();
-  Wire.onReceive(receiveEvent); // register event
 
+  Robot.stroke(0,0,0);
+  Robot.text("Program start",0,0);
+  
+  Wire.begin(4);                // join i2c bus with address #4
+  Wire.onReceive(receiveEvent); // register event
 }
 
 void loop()
@@ -32,24 +34,35 @@ void loop()
 // this function is registered as an event, see setup()
 void receiveEvent(int howMany)
 {
-  while(1 < Wire.available()) // loop through all but the last
-  {
+//  while(1 < Wire.available()) // loop through all but the last
+  //{
+    Robot.stroke(0,0,0);
+    Robot.text("test",10,0);
     int angle = Wire.read(); // receive byte as a character
-    Serial.print("Angle is ");
-    Serial.println(angle);         // print the character
     int compass=Robot.compassRead();
-    Serial.print("Compass is ");
-    Serial.println(compass);
-    Robot.drawCompass(compass);
-    if(angle)
-    {
-      Robot.pointTo(angle);
-      Robot.motorsStop();
-    }
-    else
-    {
-     Robot.beep(BEEP_SIMPLE);
-     delay(1000);
-    }
-  }
+    Robot.stroke(0,0,0);
+    Robot.text(angle,20,0);
+    Robot.text(compass,40,0);
+    
+    delay(1000);
+    Robot.stroke(255,255,255);
+    Robot.text(angle,20,0);
+    Robot.text(compass,40,0);
+//    Serial.print("Angle is ");
+  //  Serial.println(angle);         // print the character
+    //int compass=Robot.compassRead();
+    //Serial.print("Compass is ");
+    //Serial.println(compass);
+    //Robot.drawCompass(compass);
+//    if(angle)
+//    {
+//      Robot.pointTo(angle);
+//      Robot.motorsStop();
+//    }
+//    else
+//    {
+//     Robot.beep(BEEP_SIMPLE);
+//     delay(1000);
+//    }
+//  }
 }
