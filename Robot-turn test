@@ -16,6 +16,7 @@ void setup()
 {
   Robot.begin();
   Serial.begin(9600);
+  Serial.println("Program start");
   Wire.begin(4);                // join i2c bus with address #4
   Robot.beginTFT();
   Wire.onReceive(receiveEvent); // register event
@@ -24,12 +25,6 @@ void setup()
 
 void loop()
 {
-  int compass=Robot.compassRead();
-  Serial.println(compass);
-  Robot.drawCompass(compass);
-  
-  
-  
 
 }
 
@@ -40,28 +35,21 @@ void receiveEvent(int howMany)
   while(1 < Wire.available()) // loop through all but the last
   {
     int angle = Wire.read(); // receive byte as a character
+    Serial.print("Angle is ");
     Serial.println(angle);         // print the character
     int compass=Robot.compassRead();
+    Serial.print("Compass is ");
     Serial.println(compass);
     Robot.drawCompass(compass);
     if(angle)
     {
-      if(angle-compass>0)
-      {
-        Robot.turn(angle-compass);
-        Robot.motorsStop();
-        delay(1000);
-      }
-      else if(angle-compass<0);
-      {
-        Robot.turn(compass-angle);
-        Robot.motorsStop();
-        delay(1000);
-      }
+      Robot.pointTo(angle);
+      Robot.motorsStop();
     }
     else
     {
-      Robot.setMode(MODE_LINE_FOLLOW);
+     Robot.beep(BEEP_SIMPLE);
+     delay(1000);
     }
   }
 }
